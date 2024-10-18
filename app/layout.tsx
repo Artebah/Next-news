@@ -1,4 +1,5 @@
 import { PropsWithChildren } from "react";
+import Header from "@/components/Header";
 import "./globals.css";
 
 export const metadata = {
@@ -10,6 +11,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en">
       <body>
+        <Header />
         <div id="page">{children}</div>
       </body>
     </html>
