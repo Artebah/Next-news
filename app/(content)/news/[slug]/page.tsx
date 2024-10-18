@@ -16,7 +16,13 @@ export default function NewsDetailPage({ params }: { params: { slug: string } })
     <article className="news-article">
       <header>
         <Link href={`/news/${newsItem.slug}/image`}>
-          <Image src={`/images/${newsItem.image}`} alt={newsItem.title} width={120} height={120} />
+          <Image
+            src={`/images/${newsItem.image}`}
+            alt={newsItem.title}
+            width={120}
+            height={120}
+            sizes="100vw"
+          />
         </Link>
         <h1>{newsItem.title}</h1>
         <time dateTime={newsItem.date}>{newsItem.date}</time>

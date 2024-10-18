@@ -14,7 +14,7 @@ const NewsList = ({ news }: { news: New[] }) => {
               alt={newsItem.title}
               width={100}
               height={100}
-              quality={100}
+              sizes="100vw"
             />
             <span>{newsItem.title}</span>
           </Link>

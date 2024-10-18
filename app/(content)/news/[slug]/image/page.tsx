@@ -13,7 +13,7 @@ export default function ImagePage({ params }: { params: { slug: string } }) {
 
   return (
     <div className="fullscreen-image">
-      <Image src={`/images/${newsItem.image}`} alt={newsItem.title} width={500} height={500} />
+      <Image src={`/images/${newsItem.image}`} alt={newsItem.title} width={500} height={500} sizes="100vw" />
     </div>
   );
 }
