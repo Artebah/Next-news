@@ -1,30 +1,28 @@
-import Link from "next/link";
-
-import NewsList from "@/components/NewsList";
+import NewsList from '@/components/NewsList';
 import {
   getAvailableNewsMonths,
   getAvailableNewsYears,
   getNewsForYear,
   getNewsForYearAndMonth,
-} from "@/lib/news";
+} from '@/lib/news';
+import { Suspense } from 'react';
+import { FilterHeader } from './FilterHeader';
+import { FilteredNews } from './FilteredNews';
 
-export default function FilteredNewsPage({ params }: { params: { filter: string[] } }) {
+export default async function FilteredNewsPage({ params }: { params: { filter: string[] } }) {
   const filter = params.filter;
 
   const selectedYear = filter?.[0];
   const selectedMonth = filter?.[1];
 
   let news;
-  let links = getAvailableNewsYears();
 
   if (selectedYear && !selectedMonth) {
-    news = getNewsForYear(selectedYear);
-    links = getAvailableNewsMonths(selectedYear);
+    news = await getNewsForYear(selectedYear);
   }
 
   if (selectedYear && selectedMonth) {
-    news = getNewsForYearAndMonth(selectedYear, selectedMonth);
-    links = [];
+    news = await getNewsForYearAndMonth(selectedYear, selectedMonth);
   }
 
   let newsContent = <p>No news found for the selected period.</p>;
@@ -33,32 +31,21 @@ export default function FilteredNewsPage({ params }: { params: { filter: string[
     newsContent = <NewsList news={news} />;
   }
 
+  const availableNewsYears = await getAvailableNewsYears();
+
   if (
-    (selectedYear && !getAvailableNewsYears().includes(+selectedYear)) ||
-    (selectedMonth && !getAvailableNewsMonths(selectedYear).includes(+selectedMonth))
+    (selectedYear && !availableNewsYears.includes(selectedYear)) ||
+    (selectedMonth && !getAvailableNewsMonths(selectedYear).includes(selectedMonth))
   ) {
-    throw new Error("Invalid filter.");
+    throw new Error('Invalid filter.');
   }
 
   return (
     <>
-      <header id="archive-header">
-        <nav>
-          <ul>
-            {links.map((link) => {
-              const href = selectedYear ? `/archive/${selectedYear}/${link}` : `/archive/${link}`;
-
-              return (
-                <li key={link}>
-                  <Link href={href}>{link}</Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-      </header>
-      {}
-      {selectedYear && newsContent}
+      <Suspense fallback={<p>Loading news...</p>}>
+        <FilterHeader year={selectedYear} month={selectedMonth} />
+        <FilteredNews year={selectedYear} month={selectedMonth} />
+      </Suspense>
     </>
   );
 }

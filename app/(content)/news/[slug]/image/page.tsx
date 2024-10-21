@@ -1,11 +1,13 @@
-import { notFound } from "next/navigation";
+import { notFound } from 'next/navigation';
 
-import { DUMMY_NEWS } from "@/dummy-news";
-import Image from "next/image";
+import { DUMMY_NEWS } from '@/dummy-news';
+import Image from 'next/image';
+import { getNewsItem } from '@/lib/news';
+import { New } from '@/app/types/New';
 
-export default function ImagePage({ params }: { params: { slug: string } }) {
+export default async function ImagePage({ params }: { params: { slug: string } }) {
   const newsItemSlug = params.slug;
-  const newsItem = DUMMY_NEWS.find((newsItem) => newsItem.slug === newsItemSlug);
+  const newsItem = (await getNewsItem(newsItemSlug)) as New;
 
   if (!newsItem) {
     notFound();
